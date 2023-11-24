@@ -20,7 +20,7 @@ func TestTicker(t *testing.T) {
 		if tick == nil {
 			t.Fatal("No tick channel returned")
 		}
-		if act_duration := <-tick; act_duration != Tick(exp_duration) {
+		if act_duration := <-tick; act_duration != FrameLength(exp_duration) {
 			t.Errorf("Durations does not match. expected %v for %v", exp_duration, act_duration)
 		}
 		select {
@@ -63,7 +63,7 @@ func TestTicker(t *testing.T) {
 		if err != nil {
 			t.Error("Close Failed")
 		}
-		if tick >= Tick(1*time.Second) {
+		if tick >= FrameLength(1*time.Second) {
 			t.Error("Did not close in time")
 		}
 		if _, err := ticker.Tick(0); err == nil {
@@ -85,7 +85,7 @@ func TestTicker(t *testing.T) {
 		if err != nil {
 			t.Fatalf("Could not start listen. %v", err)
 		}
-		if _t := <-tick; _t != Tick(duration) {
+		if _t := <-tick; _t != FrameLength(duration) {
 			t.Error("Did not get correct tick")
 		}
 	})

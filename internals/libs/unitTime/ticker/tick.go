@@ -8,11 +8,11 @@ type tickRequest struct {
 }
 
 type tickResponce struct {
-	tick <-chan Tick
+	tick <-chan FrameLength
 	err  error
 }
 
-func (t *ticker) Tick(duration time.Duration) (<-chan Tick, error) {
+func (t *ticker) Tick(duration time.Duration) (<-chan FrameLength, error) {
 	if err := t.errorIfClosed(); err != nil {
 		return nil, err
 	}

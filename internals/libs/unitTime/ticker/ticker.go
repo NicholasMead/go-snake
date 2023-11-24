@@ -5,20 +5,39 @@ import (
 	"time"
 )
 
-type Tick time.Duration
+type FrameLength time.Duration
+type FrameRate float32
+
+func (t FrameLength) ToFrameRate() FrameRate {
+	return FrameRate(float32(time.Second) / float32(t))
+}
+
+func (fr FrameRate) ToFrameLength() FrameLength {
+	return FrameLength(float32(fr) / float32(time.Second))
+}
+
+func Fps(fps float32) FrameRate {
+	return FrameRate(fps)
+}
 
 type Ticker interface {
-	// Performs at tick
-	Tick(time.Duration) (<-chan Tick, error)
-
 	// Gets the current in-proress tick or returns an error
-	Listen() (<-chan Tick, error)
+	Listen() <-chan FrameLength
+
+	// Starts the tickers
+	Start()
 
 	// Stops the current in-process tick and return the elapsed time
-	Stop() (Tick, error)
+	Stop() FrameLength
+
+	// Sets the Frame Rate
+	SetFrameRate(fr FrameRate)
+
+	// Adjusts the Frame Rate by a set factor
+	AdjustFrameRate(factor float32)
 
 	// Closes the Ticker
-	Close() (Tick, error)
+	Close() FrameLength
 }
 
 type ticker struct {

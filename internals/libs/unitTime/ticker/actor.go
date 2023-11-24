@@ -10,19 +10,19 @@ type state struct {
 	end   time.Time
 	ready bool
 	act   <-chan time.Time
-	out   chan Tick
+	out   chan FrameLength
 }
 
 func (s *state) inProgress() bool {
 	return *s != *new(state)
 }
 
-func (s state) elapsed() Tick {
-	return Tick(time.Since(s.start))
+func (s state) elapsed() FrameLength {
+	return FrameLength(time.Since(s.start))
 }
 
-func (s state) duration() Tick {
-	return Tick(s.end.Sub(s.start))
+func (s state) duration() FrameLength {
+	return FrameLength(s.end.Sub(s.start))
 }
 
 func (s *state) close() {
@@ -68,7 +68,7 @@ func actor(t *ticker) {
 				start: start,
 				end:   start.Add(req.duration),
 				act:   time.After(req.duration),
-				out:   make(chan Tick),
+				out:   make(chan FrameLength),
 			}
 
 			req.resp <- tickResponce{tick.out, nil}

@@ -3,29 +3,14 @@ package unitTime
 import "nickmead.tech/snake/internals/libs/unitTime/ticker"
 
 type Game[TState any] struct {
-	state       TState
-	controllers []GameController[TState]
+	state      TState
+	controller GameController[TState]
 
-	ticker    ticker.Ticker
-	frameRate float32
+	ticker ticker.Ticker
 }
 
-func (game *Game[TArgs]) framePreTick() {
-	for _, c := range game.controllers {
-		c.OnFramePreTick(GameContext[TArgs]{game})
-	}
-}
-
-func (game *Game[TArgs]) framePostTick() {
-	for _, c := range game.controllers {
-		c.OnFramePostTick(GameContext[TArgs]{game})
-	}
-}
-
-func (game *Game[TArgs]) Tick() {
-	game.framePreTick()
-	for _, c := range game.controllers {
-		c.OnFrameTick(GameContext[TArgs]{game})
-	}
-	game.framePostTick()
+func (game *Game[TArgs]) onFrame() {
+	game.controller.OnPreFrame(GameContext[TArgs]{game})
+	game.controller.OnFrame(GameContext[TArgs]{game})
+	game.controller.OnPostFrame(GameContext[TArgs]{game})
 }

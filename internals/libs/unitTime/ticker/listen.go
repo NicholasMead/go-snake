@@ -4,7 +4,7 @@ type listenRequest struct {
 	resp chan<- tickResponce
 }
 
-func (t *ticker) Listen() (<-chan Tick, error) {
+func (t *ticker) Listen() (<-chan FrameLength, error) {
 	if err := t.errorIfClosed(); err != nil {
 		return nil, err
 	}
